@@ -149,13 +149,6 @@
 			path = MyCollectionView;
 			sourceTree = "<group>";
 		};
-		4136EE1B2AD8A86000162898 /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Controller;
-			sourceTree = "<group>";
-		};
 		4136EE1C2AD8A87300162898 /* MyTableView */ = {
 			isa = PBXGroup;
 			children = (
@@ -199,7 +192,6 @@
 				410298D82AE6869200873474 /* Extensions */,
 				410298D52AE6848900873474 /* Constants */,
 				410298D42AE6844300873474 /* CommonView */,
-				4136EE1B2AD8A86000162898 /* Controller */,
 				410298D62AE685B700873474 /* Module */,
 				4136EE1D2AD8A89500162898 /* Resources */,
 				41546BFD2ACF8CFD008BE51E /* AppDelegate.swift */,

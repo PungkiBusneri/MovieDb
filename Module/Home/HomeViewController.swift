@@ -18,15 +18,13 @@ class HomeViewController: UIViewController {
     private var genreList = [Genre]()
     private var movieList = [MovieList]()
     private var cellIdentifier = "MyTableViewCell"
-    private var originalMovieList = [MovieList]()
-    private var hasLoadedInitialMovies = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupComponent()
         getDataMovieList(1)
         getDataGenreList()
-        
+
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -40,13 +38,6 @@ class HomeViewController: UIViewController {
         tableViewMovieList.dataSource = self
         
         tableViewMovieList.register(UINib(nibName: cellIdentifier, bundle: nil), forCellReuseIdentifier: cellIdentifier)
-        
-        textFieldSearch.delegate = self
-        textFieldSearch.attributedPlaceholder = NSAttributedString(
-            string: "Search your films here",
-            attributes: [NSAttributedString.Key.foregroundColor: UIColor.white]
-        )
-        textFieldSearch.textColor = .white
     }
     
     func setupRefreshControl() {
@@ -78,7 +69,6 @@ extension HomeViewController: UITableViewDataSource {
         return cell
     }
 }
-
 extension HomeViewController {
     private func getDataMovieList(_ page: Int) {
         activityIndicator.startAnimating()
@@ -89,14 +79,8 @@ extension HomeViewController {
                 
             } else {
                 guard let result = data else { return }
-                
-                if !self.hasLoadedInitialMovies {
-                    self.originalMovieList = result
-                    self.hasLoadedInitialMovies = true
-                }
-                
-                self.movieList = self.textFieldSearch.text?.isEmpty ?? true ? self.originalMovieList: result
-                    self.tableViewMovieList.reloadData()
+                self.movieList = result
+                self.tableViewMovieList.reloadData()
             }
         }
     }
@@ -111,51 +95,6 @@ extension HomeViewController {
                 guard let result = data else { return }
                 self.genreList = result
             }
-        }
-    }
-}
-
-extension HomeViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        guard let currentText = textField.text else  { return true }
-        
-        let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
-        let searchKeywords = newText.lowercased().components(separatedBy: " ")
-        
-        if searchKeywords.isEmpty {
-            updateMovieList(originalMovieList)
-            
-        } else {
-            
-            let filteredMovies = originalMovieList.filter { movie in
-                
-                return searchKeywords.allSatisfy { keyword in
-                    return movie.title.lowercased().contains(keyword)
-                }
-            }
-            
-            updateMovieList(filteredMovies)
-        }
-        
-        return true
-    }
-    
-    func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        
-        updateMovieList(originalMovieList)
-        return true
-    }
-    
-    private func updateMovieList(_ newMovieList: [MovieList]) {
-        if newMovieList.isEmpty {
-            
-            movieList = originalMovieList
-            
-        } else {
-            
-            movieList = newMovieList
-            tableViewMovieList.reloadData()
         }
     }
 }
